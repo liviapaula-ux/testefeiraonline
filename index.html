@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Feira de Benefícios · iFood 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --red:#E8002D;
+  --red-soft:#ff4d6d;
+  --red-pale:#fff5f7;
+  --red-light:#ffe0e6;
+  --ink:#1c1c1e;
+  --ink-2:#3a3a3c;
+  --muted:#8e8e93;
+  --bg:#f5f4f0;
+  --surface:#ffffff;
+  --surface-2:#f9f8f5;
+  --border:#e8e5de;
+  --border-s:#d4d0c8;
+  --green:#1a7a4a;
+  --green-pale:#edf7f1;
+  --blue:#1a56a0;
+  --blue-pale:#eef4fd;
+  --purple:#6b3fa0;
+  --purple-pale:#f3eeff;
+  --amber:#b45309;
+  --amber-pale:#fef9ec;
+  --r:14px;--rs:8px;
+}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;overflow-x:hidden}
+
+/* ═══ SCREENS ═══ */
+.screen{display:none}
+.screen.on{display:block}
+
+/* ═══════════════ LOGIN ═══════════════ */
+#s-login{min-height:100vh;display:none;align-items:center;justify-content:center;padding:24px;
+  background:linear-gradient(145deg,#1c1c1e 0%,#2d1a20 100%)}
+#s-login.on{display:flex}
+.lbox{background:#fff;border-radius:22px;padding:40px 36px;width:100%;max-width:400px;box-shadow:0 24px 60px rgba(0,0,0,.18)}
+.lbox-mark{display:flex;align-items:center;gap:8px;margin-bottom:26px}
+.lbox-dot{width:22px;height:22px;background:var(--red);border-radius:50%}
+.lbox-brand{font-size:13px;font-weight:700;color:var(--ink-2)}
+.lbox h2{font-size:26px;font-weight:700;line-height:1.2;margin-bottom:6px}
+.lbox h2 em{color:var(--red);font-style:normal}
+.lbox p{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:26px}
+.lbl-f{font-size:12px;font-weight:600;margin-bottom:5px;color:var(--ink-2)}
+.inp{width:100%;padding:11px 13px;border:1.5px solid var(--border-s);border-radius:var(--rs);font-size:14px;font-family:inherit;outline:none;transition:border .15s;background:#fafaf9}
+.inp:focus{border-color:var(--red)}
+.err-msg{font-size:12px;color:#c00;margin-top:7px;display:none}
+.btn-red{width:100%;padding:12px;background:var(--red);color:#fff;border:none;border-radius:var(--rs);font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;margin-top:13px;transition:opacity .15s}
+.btn-red:hover{opacity:.9}
+.btn-red:disabled{background:#ccc;cursor:default;opacity:1}
+.lbox-note{font-size:11px;color:var(--muted);text-align:center;margin-top:14px;line-height:1.6}
+
+/* ═══════════════ TOPBAR ═══════════════ */
+.topbar{background:var(--ink);padding:11px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:80}
+.tb-brand{display:flex;align-items:center;gap:7px}
+.tb-dot{width:16px;height:16px;background:var(--red);border-radius:50%}
+.tb-name{font-size:13px;font-weight:600;color:#fff}
+.tb-right{display:flex;align-items:center;gap:10px}
+.tb-user{font-size:12px;color:rgba(255,255,255,.45);max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tb-badge{background:var(--red);color:#fff;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px}
+
+/* ═══════════════ TRAIL ═══════════════ */
+.trail-wrap{padding:0 16px;max-width:680px;margin:0 auto}
+
+/* PAGE NAV */
+.page-nav{display:flex;align-items:center;justify-content:center;gap:0;padding:18px 0 0;position:relative}
+.page-nav::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:calc(100% - 80px);height:2px;background:var(--border);z-index:0;margin-top:9px}
+.pn-step{display:flex;flex-direction:column;align-items:center;gap:5px;position:relative;z-index:1;flex:1;cursor:pointer}
+.pn-circle{width:36px;height:36px;border-radius:50%;background:var(--surface);border:2px solid var(--border-s);display:flex;align-items:center;justify-content:center;font-size:16px;transition:all .3s;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.pn-step.done .pn-circle{background:var(--green-pale);border-color:var(--green)}
+.pn-step.active .pn-circle{background:var(--red-pale);border-color:var(--red);box-shadow:0 0 0 4px var(--red-light)}
+.pn-label{font-size:10px;font-weight:600;color:var(--muted);text-align:center;line-height:1.3;max-width:64px}
+.pn-step.active .pn-label{color:var(--red)}
+.pn-step.done .pn-label{color:var(--green)}
+
+/* AVATAR TRAIL */
+.avatar-trail{position:relative;height:64px;margin:12px 0 4px;overflow:visible}
+.trail-line{position:absolute;top:50%;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--border) 0%,var(--border) 100%);transform:translateY(-50%);border-radius:2px}
+.trail-line-done{position:absolute;top:50%;left:0;height:3px;background:linear-gradient(90deg,var(--green) 0%,var(--red-soft) 100%);transform:translateY(-50%);border-radius:2px;transition:width .6s cubic-bezier(.4,0,.2,1);width:0%}
+.avatar{position:absolute;top:50%;transform:translate(-50%,-50%);width:44px;height:44px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 4px 14px rgba(232,0,45,.35);transition:left .6s cubic-bezier(.4,0,.2,1);z-index:2;left:0%}
+.avatar::after{content:'';position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);width:8px;height:8px;border-radius:50%;background:rgba(232,0,45,.25);animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{transform:translateX(-50%) scale(1);opacity:.8}50%{transform:translateX(-50%) scale(1.5);opacity:0}}
+
+/* ARENA CARD */
+.arena{background:var(--surface);border:1px solid var(--border);border-radius:20px;overflow:hidden;margin-bottom:12px;display:none}
+.arena.active{display:block}
+.arena-header{padding:18px 20px 14px;border-bottom:1px solid var(--border)}
+.arena-tag{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border-radius:20px;display:inline-block;margin-bottom:8px}
+.arena-title{font-size:19px;font-weight:700;line-height:1.2;margin-bottom:3px}
+.arena-sub{font-size:13px;color:var(--muted);line-height:1.5}
+
+/* STAND CARD */
+.stands{padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.stand{border:1px solid var(--border);border-radius:var(--r);overflow:hidden;cursor:pointer;transition:all .15s;background:var(--surface-2)}
+.stand:hover{border-color:var(--red-soft);box-shadow:0 2px 12px rgba(232,0,45,.08)}
+.stand.done{border-color:var(--green);background:#fafffe}
+.stand-head{padding:14px 16px;display:flex;align-items:center;gap:12px}
+.stand-ico{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.stand-info{flex:1;min-width:0}
+.stand-name{font-size:14px;font-weight:700;margin-bottom:2px}
+.stand-teaser{font-size:12px;color:var(--muted);line-height:1.4}
+.stand-right{display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0}
+.stand-tag-pill{font-size:10px;font-weight:600;padding:3px 8px;border-radius:20px}
+.stand-check{width:24px;height:24px;border-radius:50%;background:var(--green);display:none;align-items:center;justify-content:center;color:#fff;font-size:12px}
+.stand.done .stand-check{display:flex}
+
+/* MODAL */
+.modal-bg{position:fixed;inset:0;background:rgba(28,28,30,.55);z-index:200;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(2px)}
+.modal-bg.on{display:flex}
+.modal{background:var(--surface);border-radius:22px 22px 0 0;width:100%;max-width:520px;max-height:90vh;overflow-y:auto}
+.modal-pull{width:36px;height:4px;background:var(--border-s);border-radius:4px;margin:10px auto 0}
+.modal-head{padding:14px 20px 12px;display:flex;justify-content:space-between;align-items:flex-start;position:sticky;top:0;background:var(--surface);border-bottom:1px solid var(--border);z-index:1}
+.modal-x{width:28px;height:28px;border-radius:50%;border:1px solid var(--border-s);background:none;cursor:pointer;font-size:14px;color:var(--muted);display:flex;align-items:center;justify-content:center}
+.modal-body{padding:16px 20px 32px}
+.msec{margin-bottom:18px}
+.msec-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:7px}
+.msec-txt{font-size:13px;line-height:1.65;color:var(--ink-2)}
+
+/* "VOCÊ SABIA?" */
+.sabia-box{background:var(--amber-pale);border:1.5px solid #fcd34d;border-radius:var(--r);padding:14px 16px;margin-bottom:14px}
+.sabia-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--amber);margin-bottom:6px;display:flex;align-items:center;gap:5px}
+.sabia-question{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:12px;line-height:1.4}
+.quiz-opts{display:flex;flex-direction:column;gap:7px}
+.qopt{border:1.5px solid var(--border-s);border-radius:var(--rs);padding:10px 14px;cursor:pointer;font-size:13px;font-weight:500;transition:all .15s;background:#fff;color:var(--ink)}
+.qopt:hover{border-color:var(--red-soft);background:var(--red-pale)}
+.qopt.correct{border-color:var(--green);background:var(--green-pale);color:var(--green)}
+.qopt.wrong{border-color:#c0392b;background:#ffecec;color:#c0392b}
+.qfb{font-size:12px;padding:10px 13px;border-radius:var(--rs);margin-top:8px;line-height:1.55;display:none}
+.qfb.ok{background:var(--green-pale);color:var(--green);display:block}
+.qfb.err{background:#ffecec;color:#c0392b;display:block}
+
+.coll-btn{width:100%;padding:12px;background:var(--red);color:#fff;border:none;border-radius:var(--rs);font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;transition:opacity .15s}
+.coll-btn:hover{opacity:.88}
+.coll-btn:disabled{background:var(--green-pale);color:var(--green);cursor:default;opacity:1}
+.ask-link{display:block;text-align:center;margin-top:10px;font-size:12px;color:var(--red);cursor:pointer;font-weight:600}
+
+/* ARENA NAV */
+.arena-nav{display:flex;gap:8px;margin-top:4px;margin-bottom:8px}
+.anav-btn{flex:1;padding:11px;border:1.5px solid var(--border-s);border-radius:var(--rs);font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;background:var(--surface);transition:all .15s;color:var(--ink-2)}
+.anav-btn:hover{border-color:var(--red-soft)}
+.anav-btn.primary{background:var(--red);color:#fff;border-color:var(--red)}
+.anav-btn.primary:hover{opacity:.9}
+.anav-btn:disabled{opacity:.35;cursor:default}
+
+/* PASSPORT */
+.passport-section{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:16px 18px;margin-bottom:10px}
+.pp-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:13px}
+.pp-title{font-size:14px;font-weight:700}
+.pp-score{background:var(--red-pale);color:var(--red);font-size:12px;font-weight:700;padding:4px 11px;border-radius:20px}
+.stamps-g{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin-bottom:12px}
+.stamp-item{border:1.5px solid var(--border);border-radius:10px;padding:9px 4px;text-align:center;cursor:pointer;transition:all .15s}
+.stamp-item:hover{border-color:var(--red-soft)}
+.stamp-item.done{border-color:var(--green);background:var(--green-pale)}
+.stamp-ico{font-size:18px;margin-bottom:3px;display:block}
+.stamp-lbl{font-size:9px;color:var(--muted);line-height:1.3}
+.stamp-item.done .stamp-lbl{color:var(--green);font-weight:700}
+.prog-row{display:flex;align-items:center;gap:8px}
+.prog-bar{flex:1;height:6px;background:var(--border);border-radius:4px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--green),var(--red-soft));border-radius:4px;transition:width .4s}
+.prog-txt{font-size:11px;color:var(--muted);flex-shrink:0}
+.prize-banner{background:linear-gradient(135deg,#fff7ed,#fef3c7);border:2px solid #fcd34d;border-radius:var(--r);padding:16px 18px;text-align:center;margin-top:10px;display:none}
+.prize-banner.on{display:block}
+
+/* PERGUNTAS */
+.p-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:16px 18px;margin-bottom:10px}
+.p-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:9px}
+.p-sel,.p-area{width:100%;padding:10px 12px;border:1.5px solid var(--border-s);border-radius:var(--rs);font-size:13px;font-family:inherit;outline:none;background:var(--surface-2);color:var(--ink);margin-bottom:8px}
+.p-sel:focus,.p-area:focus{border-color:var(--red-soft)}
+.p-area{min-height:76px;resize:vertical}
+.p-send{padding:9px 20px;background:var(--red);color:#fff;border:none;border-radius:var(--rs);font-size:13px;font-weight:700;font-family:inherit;cursor:pointer}
+.q-item{padding:10px 0;border-bottom:1px solid var(--border);font-size:13px;line-height:1.5;color:var(--ink-2)}
+.q-item:last-child{border-bottom:none}
+.q-meta{font-size:11px;color:var(--muted);margin-bottom:3px;display:flex;gap:7px;align-items:center}
+.qbadge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px}
+.qbp{background:var(--amber-pale);color:var(--amber)}
+.qbr{background:var(--green-pale);color:var(--green)}
+
+/* RANKING */
+.rank-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:16px 18px}
+.rank-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)}
+.rank-row:last-child{border-bottom:none}
+.rpos{width:26px;text-align:center;font-size:15px;flex-shrink:0}
+.rav{width:32px;height:32px;border-radius:50%;background:var(--surface-2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--muted);flex-shrink:0}
+.rav.me{background:var(--red-pale);color:var(--red);border-color:var(--red-light)}
+.rname{flex:1;font-size:13px;font-weight:600}
+.rname.me{color:var(--red)}
+.rst{font-size:12px;color:var(--muted)}
+.rbar{width:64px;height:5px;background:var(--border);border-radius:4px;overflow:hidden;flex-shrink:0}
+.rbar-f{height:100%;background:var(--red-soft);border-radius:4px}
+
+/* TABS */
+.tabs{background:var(--surface);border-bottom:1px solid var(--border);display:flex;overflow-x:auto;position:sticky;top:42px;z-index:70}
+.tab{padding:11px 16px;font-size:12px;font-weight:700;color:var(--muted);border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap;transition:all .15s}
+.tab.on{color:var(--red);border-bottom-color:var(--red)}
+.tab-sections>div{display:none}
+.tab-sections>div.on{display:block}
+.tab-content{padding:14px 0 40px}
+
+/* TOAST */
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 22px;border-radius:30px;font-size:13px;font-weight:600;opacity:0;pointer-events:none;z-index:999;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.2);transition:opacity .3s}
+.toast.on{opacity:1}
+
+@media(max-width:400px){.stamps-g{grid-template-columns:repeat(4,1fr)}.avatar{width:38px;height:38px;font-size:19px}}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="s-login" class="screen on">
+  <div class="lbox">
+    <div class="lbox-mark"><div class="lbox-dot"></div><div class="lbox-brand">iFood People · Benefícios 2026</div></div>
+    <h2>Bem-vindo à<br><em>Feira Online</em> 🎪</h2>
+    <p>Entre com seu e-mail corporativo para explorar as arenas, coletar stamps e participar dos sorteios.</p>
+    <div class="lbl-f">E-mail corporativo</div>
+    <input class="inp" id="em" type="email" placeholder="seunome@ifood.com.br" autocomplete="email">
+    <div class="err-msg" id="err">E-mail não encontrado. Verifique e tente novamente.</div>
+    <button class="btn-red" id="lbtn" onclick="doLogin()">Entrar na feira →</button>
+    <p class="lbox-note">16 de junho · 09h–18h · Apenas colaboradores ativos</p>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div id="s-main" class="screen">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="tb-brand"><div class="tb-dot"></div><span class="tb-name">Feira de Benefícios 2026</span></div>
+    <div class="tb-right"><span class="tb-user" id="tb-u"></span><span class="tb-badge" id="tb-b">0/12</span></div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <div class="tab on" onclick="showTab('trail')">🗺️ Trilha</div>
+    <div class="tab" onclick="showTab('passport')">🎫 Passport</div>
+    <div class="tab" onclick="showTab('perguntas')">💬 Perguntas</div>
+    <div class="tab" onclick="showTab('ranking')">🏆 Ranking</div>
+  </div>
+
+  <div class="trail-wrap">
+    <div class="tab-sections">
+
+      <!-- TRILHA -->
+      <div id="tab-trail" class="on tab-content">
+
+        <!-- PAGE STEPS -->
+        <div class="page-nav" id="page-nav"></div>
+
+        <!-- AVATAR -->
+        <div class="avatar-trail">
+          <div class="trail-line"></div>
+          <div class="trail-line-done" id="trail-done"></div>
+          <div class="avatar" id="avatar">🏃</div>
+        </div>
+
+        <!-- ARENAS -->
+        <div id="arenas-container"></div>
+
+        <!-- ARENA NAV -->
+        <div class="arena-nav" id="arena-nav">
+          <button class="anav-btn" id="btn-prev" onclick="goPage(-1)" disabled>← Anterior</button>
+          <button class="anav-btn primary" id="btn-next" onclick="goPage(1)">Próxima arena →</button>
+        </div>
+
+      </div>
+
+      <!-- PASSPORT -->
+      <div id="tab-passport" class="tab-content">
+        <div class="passport-section">
+          <div class="pp-top"><div class="pp-title">🎫 Meu Passport</div><div class="pp-score" id="pp-sc">0 de 12</div></div>
+          <div class="stamps-g" id="stamps-g"></div>
+          <div class="prog-row"><div class="prog-bar"><div class="prog-fill" id="prog-f" style="width:0%"></div></div><span class="prog-txt" id="prog-t">0%</span></div>
+        </div>
+        <div class="prize-banner" id="prize-b">
+          <div style="font-size:28px;margin-bottom:6px">🏆</div>
+          <div style="font-size:15px;font-weight:700;color:#92400e">Passport completo!</div>
+          <div style="font-size:13px;color:#78350f;margin-top:4px">Você está no sorteio do prêmio âncora. Resultado às 17h!</div>
+        </div>
+      </div>
+
+      <!-- PERGUNTAS -->
+      <div id="tab-perguntas" class="tab-content">
+        <div class="p-card">
+          <div class="p-lbl">✉️ Enviar pergunta ao vivo</div>
+          <select class="p-sel" id="p-sel">
+            <option value="">Selecione o parceiro...</option>
+            <option>Wellhub</option><option>Bradesco Saúde</option><option>Unimed</option>
+            <option>Bradesco Odonto</option><option>Vida Link</option><option>Avus</option>
+            <option>Stay</option><option>Leggal</option><option>Meu Pet Club</option>
+            <option>New Vallue</option><option>iFood Benefícios</option>
+            <option>Operação de Benefícios</option><option>Benício (IA)</option>
+          </select>
+          <textarea class="p-area" id="p-txt" placeholder="Escreva sua dúvida aqui..."></textarea>
+          <button class="p-send" onclick="sendQ()">Enviar pergunta</button>
+        </div>
+        <div class="p-card">
+          <div class="p-lbl">📋 Perguntas enviadas</div>
+          <div id="q-list"><div style="font-size:13px;color:var(--muted)">Nenhuma pergunta ainda.</div></div>
+        </div>
+      </div>
+
+      <!-- RANKING -->
+      <div id="tab-ranking" class="tab-content">
+        <div class="rank-card">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:12px">Top FoodLovers · hoje</div>
+          <div id="rank-list"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-bg" id="mbg" onclick="closeMBg(event)">
+  <div class="modal" id="modal">
+    <div class="modal-pull"></div>
+    <div class="modal-head">
+      <div><div id="m-tag"></div><div id="m-title" style="font-size:17px;font-weight:700;margin-top:3px"></div></div>
+      <button class="modal-x" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="m-body"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="hcm_base.js"></script>
+<script>
+// ═══════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════
+const PAGES = [
+  {
+    id:'p1', label:'Arena Saúde\n& Bem-Estar', icon:'💊', emoji:'💊',
+    tag:'Saúde & Bem-Estar', tagColor:'--red', tagBg:'--red-pale',
+    title:'Arena 1 — Saúde & Bem-Estar',
+    sub:'Wellhub, Bradesco Saúde, Unimed, Bradesco Odonto, Vida Link e Avus',
+    stands:[
+      {id:'wellhub',name:'Wellhub',icon:'💪',tagLabel:'Bem-estar',tagC:'blue',
+       teaser:'Academias, apps e bem-estar — tudo no seu bolso.',
+       desc:'Aqui você descobre todos os parceiros do Wellhub na sua região: academias, estúdios, apps de meditação, yoga, corrida e muito mais. Tem plano básico ao premium.',
+       sorteio:'Garmin Forerunner 55',
+       sabia:{q:'Você sabia que o Wellhub tem apps incríveis e de graça?',
+         opts:['Todos os apps são pagos e têm custo adicional',
+               'O Wellhub oferece apps gratuitos de acordo com o seu plano',
+               'Só academias físicas são cobertas pelo benefício',
+               'Os apps só ficam disponíveis no plano premium'],
+         c:1, exp:'De acordo com o seu plano, você tem acesso a apps incríveis de forma totalmente gratuita — de meditação a treinos guiados. Vale explorar o que está disponível no seu nível!'}},
+      {id:'bradesco',name:'Bradesco Saúde',icon:'🏥',tagLabel:'Saúde',tagC:'red',
+       teaser:'Rede, coparticipação e reembolso — tudo explicado.',
+       desc:'Entenda de uma vez como funciona a coparticipação, como usar a rede credenciada com inteligência e quando pedir reembolso.',
+       sorteio:'Health Check Kit + R$100 em crédito de saúde',
+       sabia:{q:'Você sabia que a Bradesco Saúde tem uma das maiores redes credenciadas do Brasil?',
+         opts:['A Bradesco Saúde atende somente capitais e regiões metropolitanas',
+               'A Bradesco Saúde possui rede credenciada em todo o território nacional, incluindo cidades menores',
+               'A rede é restrita a hospitais, sem cobertura para clínicas',
+               'A rede funciona apenas em São Paulo e Rio de Janeiro'],
+         c:1, exp:'A Bradesco Saúde tem cobertura nacional ampla, com credenciados em cidades pequenas e médias além das capitais. Isso garante mais acesso em momentos importantes!'}},
+      {id:'unimed',name:'Unimed',icon:'🩺',tagLabel:'Saúde',tagC:'green',
+       teaser:'A maior rede no interior do Brasil.',
+       desc:'A Unimed CNU é especialmente forte em cidades do interior. Se você mora longe da capital, este pode ser o plano ideal para você.',
+       sorteio:'Kit de bem-estar exclusivo',
+       sabia:{q:'Você sabia que a Unimed possui a maior rede credenciada em cidades do interior no Brasil?',
+         opts:['A Unimed só tem cobertura em capitais brasileiras',
+               'A Unimed tem a maior rede credenciada em cidades do interior no Brasil',
+               'A Unimed e a Bradesco têm exatamente o mesmo número de credenciados no interior',
+               'Cidades do interior não têm cobertura de nenhum plano iFood'],
+         c:1, exp:'A Unimed se destaca justamente pela capilaridade no interior do país. Se você ou seus dependentes moram fora das grandes capitais, a rede da Unimed pode fazer toda a diferença!'}},
+      {id:'odonto',name:'Bradesco Odonto',icon:'🦷',tagLabel:'Odonto',tagC:'purple',
+       teaser:'Urgência coberta e atendimento toda terça em Osasco.',
+       desc:'O plano cobre urgências e emergências odontológicas. E um diferencial exclusivo: toda terça-feira tem atendimento no escritório de Osasco.',
+       sorteio:'Brinde surpresa + Totem de fotos',
+       sabia:{q:'Você sabia que o Bradesco Odonto cobre urgência e emergência?',
+         opts:['O plano só cobre limpeza anual e procedimentos preventivos básicos',
+               'O plano cobre urgência e emergência, e toda terça tem atendimento no escritório de Osasco',
+               'Urgências odontológicas precisam de aprovação prévia de 72 horas',
+               'O atendimento de emergência só é disponível à noite e fins de semana'],
+         c:1, exp:'O Bradesco Odonto cobre urgência e emergência odontológica — sem burocracia. E toda terça-feira tem atendimento presencial no escritório de Osasco para quem quiser resolver qualquer dúvida pessoalmente!'}},
+      {id:'vidalink',name:'Vida Link',icon:'💊',tagLabel:'Farmácia',tagC:'amber',
+       teaser:'Até R$200/mês de desconto em medicamentos recorrentes.',
+       desc:'Se você usa medicamentos de uso contínuo, o Vida Link pode gerar uma economia real todo mês — até R$200 mensais em remédios recorrentes.',
+       sorteio:'Kit farmácia exclusivo',
+       sabia:{q:'Você sabia que pelo Vida Link você pode ter até R$200 de desconto por mês em medicamentos recorrentes?',
+         opts:['O desconto máximo é de R$20 por compra, sem limite mensal',
+               'Você tem até R$200 por mês de desconto em medicamentos de uso recorrente',
+               'O benefício só vale para medicamentos comprados em uma farmácia específica',
+               'O desconto no Vida Link é fixo em 5% independente do medicamento'],
+         c:1, exp:'Para quem usa medicamentos de forma contínua, o Vida Link representa uma economia real e significativa — até R$200 por mês. Vale muito verificar se seus remédios estão na lista de cobertura!'}},
+      {id:'avus',name:'Avus',icon:'🏪',tagLabel:'Novo parceiro',tagC:'green',
+       teaser:'Planos de saúde para pais e avós — agora é possível!',
+       desc:'Parceiro novíssimo de 2026: agora você pode contratar planos de saúde para seus pais e avós com condições exclusivas. Uma das novidades mais aguardadas da eleição!',
+       sorteio:'Kit farmácia + Chaveiro álcool gel',
+       sabia:{q:'Você sabia que agora temos uma parceria incrível para você contratar planos para pais e avós?',
+         opts:['Planos para familiares mais velhos nunca foram disponibilizados no iFood',
+               'Com o Avus, agora você pode contratar planos de saúde para pais e avós com condições exclusivas',
+               'O benefício de extensão para pais já existia há 5 anos no pacote iFood',
+               'Avus é apenas uma farmácia online, sem cobertura de planos de saúde'],
+         c:1, exp:'O Avus é o parceiro novo de 2026! Com ele, você pode contratar planos de saúde para seus pais e avós — uma novidade super solicitada que finalmente chega ao pacote iFood. Vai lá conferir!'}}
+    ]
+  },
+  {
+    id:'p2', label:'Arena\nFinanceiro & Outros', icon:'💰', emoji:'💰',
+    tag:'Financeiro & Outros', tagColor:'--green', tagBg:'--green-pale',
+    title:'Arena 2 — Financeiro & Outros',
+    sub:'Stay, Leggal, Meu Pet Club e New Vallue',
+    stands:[
+      {id:'stay',name:'Stay',icon:'📈',tagLabel:'Financeiro',tagC:'green',
+       teaser:'Guarde dinheiro e se planeje para o futuro.',
+       desc:'Além de consultoria financeira, agora você pode guardar seu dinheiro na Stay e se planejar para o futuro com ótimos rendimentos e orientações gratuitas.',
+       sorteio:'R$200 na conta de previdência + Kit educação financeira',
+       sabia:{q:'Você sabia que pelo Stay você pode guardar dinheiro e planejar seu futuro com ótimos rendimentos e orientações grátis?',
+         opts:['Stay é apenas uma consultoria, sem produtos de investimento',
+               'Além de consultoria financeira, você pode guardar dinheiro com ótimos rendimentos e receber orientações grátis',
+               'O Stay só funciona para funcionários com mais de 5 anos de empresa',
+               'As orientações financeiras do Stay têm custo adicional por hora'],
+         c:1, exp:'O Stay evoluiu! Além de diagnóstico e consultoria financeira, agora você pode de fato guardar e investir o seu dinheiro com rendimentos atrativos — e as orientações são gratuitas. Uma ferramenta completa para quem quer planejar o futuro!'}},
+      {id:'leggal',name:'Leggal',icon:'⚖️',tagLabel:'Jurídico',tagC:'purple',
+       teaser:'Assistência jurídica gratuita ou planos acessíveis.',
+       desc:'Você tem assistência jurídica gratuita incluída no seu pacote, ou pode optar por planos mais completos com valor super acessível quando precisar de apoio jurídico mais robusto.',
+       sorteio:'Cafeteira Nespresso Vertuo',
+       sabia:{q:'Você sabia que você tem assistência jurídica gratuita pelo Leggal?',
+         opts:['O Leggal só oferece serviços mediante pagamento integral',
+               'Você tem assistência jurídica gratuita ou pode fazer planos super acessíveis para apoios mais completos',
+               'Assistência jurídica no iFood está disponível apenas para líderes',
+               'O Leggal só atende casos trabalhistas exclusivamente'],
+         c:1, exp:'O Leggal já está no seu pacote de benefícios com assistência jurídica gratuita! Para quem precisar de apoio mais aprofundado (contratos, família, imóveis), existem planos de contratação com valores bem acessíveis.'}},
+      {id:'meuPet',name:'Meu Pet Club',icon:'🐾',tagLabel:'Pet',tagC:'amber',
+       teaser:'Telemedicina gratuita para o seu pet!',
+       desc:'Novidade 2026: agora seu pet tem direito à telemedicina veterinária gratuita pelo Meu Pet Club. Consulta online, sem sair de casa.',
+       sorteio:'Aula de adestramento + Kit petfood Purina',
+       sabia:{q:'Você sabia que agora seu pet tem telemedicina gratuita pelo Meu Pet Club?',
+         opts:['Telemedicina veterinária ainda não existe como benefício no iFood',
+               'Agora seu pet tem telemedicina gratuita pelo Meu Pet Club',
+               'A telemedicina é cobrada por consulta, mas com desconto de 20%',
+               'O serviço de telemedicina está disponível apenas para cães de porte pequeno'],
+         c:1, exp:'Grande novidade de 2026! O Meu Pet Club agora oferece telemedicina veterinária gratuita. Consulta online pelo celular, sem precisar sair de casa — ideal para dúvidas rápidas e triagem antes de uma consulta presencial!'}},
+      {id:'newVallue',name:'New Vallue',icon:'🛍️',tagLabel:'Benefícios Flex',tagC:'blue',
+       teaser:'Descontos exclusivos em mais de 50 estabelecimentos.',
+       desc:'A New Vallue traz descontos exclusivos em mais de 50 estabelecimentos parceiros — de restaurantes a livrarias, passando por cultura, esporte e muito mais.',
+       sorteio:'Gift Card R$100 + Camiseta oficial da Copa CBF',
+       sabia:{q:'Você sabia que temos descontos exclusivos em mais de 50 estabelecimentos pelo New Vallue?',
+         opts:['A New Vallue tem parceria com apenas 5 estabelecimentos no total',
+               'Temos descontos exclusivos em mais de 50 estabelecimentos pelo New Vallue',
+               'Os descontos da New Vallue são válidos apenas para compras online',
+               'New Vallue só oferece descontos em supermercados e farmácias'],
+         c:1, exp:'São mais de 50 parceiros com descontos exclusivos para FoodLovers! Cultura, alimentação, esporte, educação e muito mais — vale dar uma olhada no catálogo e aproveitar os benefícios que você talvez ainda não conhecesse!'}}
+    ]
+  },
+  {
+    id:'p3', label:'Arena\niFood Benefícios', icon:'🍕', emoji:'🍕',
+    tag:'iFood Benefícios', tagColor:'--red', tagBg:'--red-pale',
+    title:'Arena 3 — iFood Benefícios',
+    sub:'O melhor cartão multibenefícios do Brasil',
+    stands:[
+      {id:'ifoodBen',name:'iFood Benefícios',icon:'💳',tagLabel:'Multibenefícios',tagC:'red',
+       teaser:'O melhor cartão multibenefícios do Brasil.',
+       desc:'VA, VR, mobilidade, farmácia, cultura e saldo livre — tudo num cartão só. O iFood Benefícios é reconhecido como o melhor cartão multibenefícios do Brasil.',
+       sorteio:'Prêmio exclusivo iFood',
+       sabia:{q:'Você sabia que o iFood Benefícios tem o melhor cartão multibenefícios do Brasil?',
+         opts:['O cartão iFood Benefícios só aceita alimentação e refeição',
+               'O iFood Benefícios tem o melhor cartão multibenefícios do Brasil — VA, VR, mobilidade e muito mais',
+               'O cartão funciona apenas no app do iFood para delivery',
+               'O saldo do cartão expira todo mês e não pode ser acumulado'],
+         c:1, exp:'O iFood Benefícios reúne VA, VR, mobilidade, farmácia, cultura e saldo livre em um único cartão. Reconhecido como o melhor multibenefícios do Brasil, ele dá liberdade de escolha real para o FoodLover!'}}
+    ]
+  },
+  {
+    id:'p4', label:'Arena\nOperação & IA', icon:'🤖', emoji:'🤖',
+    tag:'Operação & Benício', tagColor:'--blue', tagBg:'--blue-pale',
+    title:'Arena 4 — Operação & Benício',
+    sub:'A equipe e a IA que sustentam seus benefícios todo dia',
+    stands:[
+      {id:'operacao',name:'Operação de Benefícios',icon:'⚙️',tagLabel:'Operação',tagC:'blue',
+       teaser:'Uma equipe incrível cuida dos seus benefícios todo dia.',
+       desc:'Por trás de cada benefício existe uma operação dedicada que garante que tudo funcione no dia a dia dos FoodLovers — de forma invisível, mas essencial.',
+       sorteio:'Garrafa térmica exclusiva Lockton',
+       sabia:{q:'Você sabia que temos uma operação incrível que sustenta diariamente os benefícios dos FoodLovers?',
+         opts:['Os benefícios são gerenciados automaticamente sem nenhuma equipe dedicada',
+               'Temos uma operação incrível que sustenta e garante os benefícios dos FoodLovers todos os dias',
+               'A operação de benefícios só atua uma vez por ano durante a eleição',
+               'Apenas os líderes têm acesso direto à equipe de operação de benefícios'],
+         c:1, exp:'Existe uma equipe dedicada trabalhando todos os dias para que seus benefícios funcionem sem fricção. Da elegibilidade ao pagamento, passando por dúvidas e exceções — há pessoas comprometidas cuidando disso para você!'}},
+      {id:'benicio',name:'Benício',icon:'🤖',tagLabel:'Agente IA',tagC:'purple',
+       teaser:'Seu agente de IA para tudo sobre benefícios.',
+       desc:'O Benício é o agente de IA do iFood, super atualizado e pronto para te ajudar nas escolhas da eleição e no seu dia a dia. Pergunte qualquer coisa sobre seus benefícios!',
+       sorteio:'Experiência exclusiva com o Benício',
+       sabia:{q:'Você sabia que agora temos o Benício, um agente de IA super atualizado para te ajudar nas escolhas e no dia a dia?',
+         opts:['O Benício é apenas um chatbot básico sem integração com os benefícios',
+               'O Benício é um agente de IA super atualizado que te ajuda nas escolhas e no dia a dia dos benefícios',
+               'O Benício só responde dúvidas durante o período de eleição',
+               'O acesso ao Benício é restrito a gerentes e diretores'],
+         c:1, exp:'O Benício chegou para ficar! É um agente de IA profundo, atualizado com todas as informações dos seus benefícios. Pode usar para tirar dúvidas, simular escolhas e entender melhor o seu pacote — tanto na eleição quanto no dia a dia!'}}
+    ]
+  }
+];
+
+const ALL_STANDS = PAGES.flatMap(p => p.stands);
+
+// ═══════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════
+let USER = null;
+let collected = new Set();
+let questions = [];
+let currentPage = 0;
+let currentStand = null;
+let quizDone = false;
+const SHEETS_URL = '';
+
+const fakeRank = [
+  {n:'Ana F.',s:12,av:'AF'},{n:'Lucas M.',s:10,av:'LM'},
+  {n:'Camila R.',s:9,av:'CR'},{n:'Bruno T.',s:7,av:'BT'},{n:'Pedro A.',s:5,av:'PA'}
+];
+
+// ═══════════════════════════════════════════════
+// LOGIN
+// ═══════════════════════════════════════════════
+document.getElementById('em').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+
+function doLogin() {
+  const email = document.getElementById('em').value.trim().toLowerCase();
+  const err = document.getElementById('err');
+  err.style.display = 'none';
+  if (!email || !email.includes('@')) { err.textContent='Digite um e-mail válido.'; err.style.display='block'; return; }
+  const found = typeof HCM !== 'undefined' ? HCM[email] : null;
+  if (!found) { err.style.display='block'; return; }
+  USER = { email, nome:found[0], dept:found[1], local:found[2], nivel:found[3], area:found[4] };
+  const saved = localStorage.getItem('feira26_'+email);
+  if (saved) { try { const d=JSON.parse(saved); collected=new Set(d.c||[]); questions=d.q||[]; } catch(e){} }
+  logSheets('login',{});
+  initMain();
+  document.getElementById('s-login').classList.remove('on');
+  document.getElementById('s-main').classList.add('on');
+}
+
+// ═══════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════
+function initMain() {
+  const fn = USER.nome.split(' ')[0];
+  document.getElementById('tb-u').textContent = fn;
+  buildPageNav();
+  buildArenas();
+  buildStampsGrid();
+  renderRanking();
+  renderQuestions();
+  updateTrail();
+}
+
+function buildPageNav() {
+  const el = document.getElementById('page-nav');
+  el.innerHTML = PAGES.map((p,i)=>`
+    <div class="pn-step ${i===0?'active':''}" id="pn-${i}" onclick="jumpPage(${i})">
+      <div class="pn-circle">${p.icon}</div>
+      <div class="pn-label">${p.label}</div>
+    </div>`).join('');
+}
+
+function buildArenas() {
+  const con = document.getElementById('arenas-container');
+  con.innerHTML = PAGES.map((p,pi)=>{
+    const tagStyle = `style="background:var(${p.tagBg});color:var(${p.tagColor})"`;
+    const stands = p.stands.map(s => {
+      const colors = {red:'#fff5f7',green:'#edf7f1',blue:'#eef4fd',purple:'#f3eeff',amber:'#fef9ec'};
+      const tcol = {red:'var(--red)',green:'var(--green)',blue:'var(--blue)',purple:'var(--purple)',amber:'var(--amber)'};
+      return `<div class="stand ${collected.has(s.id)?'done':''}" id="sc-${s.id}" onclick="openStand('${s.id}')">
+        <div class="stand-head">
+          <div class="stand-ico" style="background:${colors[s.tagC]||'#f5f4f0'}">${s.icon}</div>
+          <div class="stand-info">
+            <div class="stand-name">${s.name}</div>
+            <div class="stand-teaser">${s.teaser}</div>
+          </div>
+          <div class="stand-right">
+            <div class="stand-tag-pill" style="background:${colors[s.tagC]};color:${tcol[s.tagC]}">${s.tagLabel}</div>
+            <div class="stand-check">✓</div>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+    return `<div class="arena ${pi===0?'active':''}" id="arena-${pi}">
+      <div class="arena-header">
+        <div class="arena-tag" ${tagStyle}>${p.tag}</div>
+        <div class="arena-title">${p.title}</div>
+        <div class="arena-sub">${p.sub}</div>
+      </div>
+      <div class="stands">${stands}</div>
+    </div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════
+// TRAIL + AVATAR
+// ═══════════════════════════════════════════════
+function updateTrail() {
+  const total = PAGES.length;
+  const pct = (currentPage / (total-1)) * 100;
+  document.getElementById('trail-done').style.width = pct + '%';
+  document.getElementById('avatar').style.left = pct + '%';
+  // avatar emoji changes by page
+  const emojis = ['🏃','🚶','🎯','🎉'];
+  document.getElementById('avatar').textContent = emojis[currentPage] || '🏃';
+  // update steps
+  PAGES.forEach((_,i) => {
+    const el = document.getElementById('pn-'+i);
+    el.className = 'pn-step' + (i===currentPage?' active':i<currentPage?' done':'');
+  });
+  updateNavBtns();
+  updateStampsAndProgress();
+  document.getElementById('tb-b').textContent = collected.size+'/'+ALL_STANDS.length;
+}
+
+function updateNavBtns() {
+  document.getElementById('btn-prev').disabled = currentPage === 0;
+  const btn = document.getElementById('btn-next');
+  if (currentPage === PAGES.length-1) {
+    btn.textContent = '🎉 Fim da trilha!'; btn.disabled = true;
+  } else {
+    btn.textContent = 'Próxima arena →'; btn.disabled = false;
+  }
+}
+
+function goPage(dir) {
+  const np = currentPage + dir;
+  if (np < 0 || np >= PAGES.length) return;
+  showPage(np);
+}
+
+function jumpPage(i) { showPage(i); }
+
+function showPage(i) {
+  document.getElementById('arena-'+currentPage).classList.remove('active');
+  currentPage = i;
+  document.getElementById('arena-'+currentPage).classList.add('active');
+  updateTrail();
+  document.getElementById('arena-'+currentPage).scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+// ═══════════════════════════════════════════════
+// STAND MODAL
+// ═══════════════════════════════════════════════
+function openStand(id) {
+  const s = ALL_STANDS.find(x=>x.id===id);
+  currentStand = id;
+  quizDone = collected.has(id);
+  const colors = {red:'#fff5f7',green:'#edf7f1',blue:'#eef4fd',purple:'#f3eeff',amber:'#fef9ec'};
+  const tcol = {red:'var(--red)',green:'var(--green)',blue:'var(--blue)',purple:'var(--purple)',amber:'var(--amber)'};
+  document.getElementById('m-tag').innerHTML = `<span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:${tcol[s.tagC]};background:${colors[s.tagC]};padding:3px 10px;border-radius:20px">${s.tagLabel}</span>`;
+  document.getElementById('m-title').textContent = s.icon + ' ' + s.name;
+  const done = collected.has(id);
+  const q = s.sabia;
+  document.getElementById('m-body').innerHTML = `
+    <div class="msec">
+      <div class="msec-lbl">Sobre este stand</div>
+      <div class="msec-txt">${s.desc}</div>
+    </div>
+    <div class="sabia-box">
+      <div class="sabia-label">💡 Você sabia?</div>
+      <div class="sabia-question">${q.q}</div>
+      <div class="quiz-opts">
+        ${q.opts.map((o,i)=>`<div class="qopt ${done&&i===q.c?'correct':''}" id="qo${i}" onclick="answerQ(${i})">${o}</div>`).join('')}
+      </div>
+      <div id="qfb" class="${done?'qfb ok':''}">${done?'✓ Já coletado! '+q.exp:''}</div>
+    </div>
+    <div class="msec">
+      <div class="msec-lbl">🎁 Sorteio deste stand</div>
+      <div class="msec-txt">${s.sorteio}</div>
+    </div>
+    <button class="coll-btn" id="cbtn" ${done?'disabled':''} onclick="collectStamp()">${done?'✓ Stamp coletado!':'Coletar stamp'}</button>
+    <a class="ask-link" onclick="goAsk('${s.name}')">Tenho uma dúvida sobre ${s.name} →</a>`;
+  document.getElementById('mbg').classList.add('on');
+}
+
+function answerQ(idx) {
+  if (quizDone) return;
+  const s = ALL_STANDS.find(x=>x.id===currentStand);
+  quizDone = true;
+  s.sabia.opts.forEach((_,i) => {
+    const el = document.getElementById('qo'+i);
+    if (i===s.sabia.c) el.className='qopt correct';
+    else if (i===idx&&idx!==s.sabia.c) el.className='qopt wrong';
+  });
+  const fb = document.getElementById('qfb');
+  if (idx===s.sabia.c) { fb.className='qfb ok'; fb.textContent='✓ Correto! '+s.sabia.exp; }
+  else { fb.className='qfb err'; fb.textContent='Quase! Correto: "'+s.sabia.opts[s.sabia.c]+'". '+s.sabia.exp; }
+  document.getElementById('cbtn').disabled = false;
+}
+
+function collectStamp() {
+  if (collected.has(currentStand)) return;
+  const s = ALL_STANDS.find(x=>x.id===currentStand);
+  collected.add(currentStand);
+  saveState();
+  rebuildStandCard(currentStand);
+  updateStampsAndProgress();
+  logSheets('stamp',{stand:s.name,stand_id:currentStand});
+  toast('Stamp '+s.icon+' coletado!');
+  const btn = document.getElementById('cbtn');
+  if(btn){btn.textContent='✓ Stamp coletado!';btn.disabled=true;}
+}
+
+function rebuildStandCard(id) {
+  const el = document.getElementById('sc-'+id);
+  if (el) { el.classList.add('done'); el.querySelector('.stand-check').style.display='flex'; el.querySelector('.stand-tag-pill'); }
+}
+
+// ═══════════════════════════════════════════════
+// PASSPORT + PROGRESS
+// ═══════════════════════════════════════════════
+function buildStampsGrid() {
+  const g = document.getElementById('stamps-g');
+  g.innerHTML = ALL_STANDS.map(s=>`
+    <div class="stamp-item ${collected.has(s.id)?'done':''}" id="st-${s.id}" onclick="openStand('${s.id}')">
+      <span class="stamp-ico">${s.icon}</span>
+      <div class="stamp-lbl">${s.name.split(' ')[0]}</div>
+    </div>`).join('');
+}
+
+function updateStampsAndProgress() {
+  const n = collected.size, total = ALL_STANDS.length;
+  const pct = Math.round(n/total*100);
+  document.getElementById('pp-sc').textContent = n+' de '+total;
+  document.getElementById('prog-f').style.width = pct+'%';
+  document.getElementById('prog-t').textContent = pct+'%';
+  document.getElementById('tb-b').textContent = n+'/'+total;
+  if (n===total) document.getElementById('prize-b').classList.add('on');
+  ALL_STANDS.forEach(s => {
+    const el = document.getElementById('st-'+s.id);
+    if (el) el.className='stamp-item'+(collected.has(s.id)?' done':'');
+  });
+  renderRanking();
+}
+
+// ═══════════════════════════════════════════════
+// PERGUNTAS
+// ═══════════════════════════════════════════════
+function sendQ() {
+  const par = document.getElementById('p-sel').value;
+  const txt = document.getElementById('p-txt').value.trim();
+  if (!par||!txt) { toast('Selecione o parceiro e escreva sua dúvida!'); return; }
+  const q = {par,txt,status:'pendente',ts:new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})};
+  questions.unshift(q);
+  saveState();
+  logSheets('pergunta',{parceiro:par,pergunta:txt});
+  renderQuestions();
+  document.getElementById('p-txt').value='';
+  toast('Pergunta enviada! 👍');
+}
+
+function renderQuestions() {
+  const el = document.getElementById('q-list');
+  if (!questions.length) { el.innerHTML='<div style="font-size:13px;color:var(--muted)">Nenhuma pergunta ainda. Seja o primeiro!</div>'; return; }
+  el.innerHTML = questions.map(q=>`
+    <div class="q-item">
+      <div class="q-meta"><span>${q.par}</span><span>${q.ts||''}</span><span class="qbadge ${q.status==='respondida'?'qbr':'qbp'}">${q.status}</span></div>
+      <div>${q.txt}</div>
+      ${q.resp?`<div style="margin-top:6px;padding:8px 10px;background:var(--green-pale);border-left:3px solid var(--green);border-radius:0 6px 6px 0;font-size:12px;color:var(--green)">💬 ${q.resp}</div>`:''}
+    </div>`).join('');
+}
+
+function goAsk(nome) {
+  closeModal();
+  showTab('perguntas');
+  const sel = document.getElementById('p-sel');
+  for(let i=0;i<sel.options.length;i++){if(sel.options[i].text.startsWith(nome.split(' ')[0])){sel.selectedIndex=i;break;}}
+  document.getElementById('p-txt').focus();
+}
+
+// ═══════════════════════════════════════════════
+// RANKING
+// ═══════════════════════════════════════════════
+function renderRanking() {
+  let arr = [...fakeRank];
+  const meIdx = arr.findIndex(r=>r.isMe);
+  if (meIdx>=0) arr[meIdx].s=collected.size;
+  else arr.push({n:USER?USER.nome.split(' ')[0]:'Você',s:collected.size,av:USER?USER.nome.split(' ').map(x=>x[0]).join('').substring(0,2).toUpperCase():'VO',isMe:true});
+  arr.sort((a,b)=>b.s-a.s);
+  const max = arr[0].s||1;
+  document.getElementById('rank-list').innerHTML = arr.map((r,i)=>`
+    <div class="rank-row">
+      <div class="rpos">${i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1}</div>
+      <div class="rav ${r.isMe?'me':''}">${r.av}</div>
+      <div class="rname ${r.isMe?'me':''}">${r.n}${r.isMe?' (você)':''}</div>
+      <div class="rst">${r.s} stamps</div>
+      <div class="rbar"><div class="rbar-f" style="width:${Math.round(r.s/max*100)}%"></div></div>
+    </div>`).join('');
+}
+
+// ═══════════════════════════════════════════════
+// UI HELPERS
+// ═══════════════════════════════════════════════
+function showTab(t) {
+  document.querySelectorAll('.tab').forEach((el,i)=>el.classList.toggle('on',['trail','passport','perguntas','ranking'][i]===t));
+  document.querySelectorAll('.tab-sections>div').forEach(el=>el.classList.remove('on'));
+  document.getElementById('tab-'+t).classList.add('on');
+}
+
+function closeMBg(e){if(e.target===document.getElementById('mbg'))closeModal();}
+function closeModal(){document.getElementById('mbg').classList.remove('on');}
+
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('on');
+  setTimeout(()=>t.classList.remove('on'),2500);
+}
+
+// ═══════════════════════════════════════════════
+// PERSISTENCE + SHEETS
+// ═══════════════════════════════════════════════
+function saveState(){
+  if(!USER)return;
+  localStorage.setItem('feira26_'+USER.email,JSON.stringify({c:[...collected],q:questions}));
+}
+
+async function logSheets(type,data){
+  if(!SHEETS_URL||!USER)return;
+  try{fetch(SHEETS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({type,timestamp:new Date().toISOString(),email:USER.email,nome:USER.nome,dept:USER.dept,local:USER.local,nivel:USER.nivel,...data})});}catch(e){}
+}
+</script>
+</body>
+</html>
